@@ -1,5 +1,6 @@
 variable "profile" {}
 variable "region" {}
+variable "environment" {}
 variable "cidr_block" {
     type = string 
     description = "Cidr block for the network"

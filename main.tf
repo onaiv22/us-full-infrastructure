@@ -15,3 +15,8 @@ module "networking" {
     vpc_id = module.vpc.vpc_id
     gw_id = module.vpc.gw_id
 }
+
+module "container" {
+    source = "./modules/container"
+    name = "${local.name_prefix}-head"
+}

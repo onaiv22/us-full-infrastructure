@@ -1,5 +1,6 @@
 profile   = "devops-engineer"
 region    = "us-east-1"
+environment = "notprod"
 
 # VPC Networking range
 vpc_cidr = "10.0.0.0/16"
