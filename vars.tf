@@ -16,3 +16,5 @@ variable "enable_dns_support" {
 variable "project_networks" {
     type = map(any)
 }
+
+

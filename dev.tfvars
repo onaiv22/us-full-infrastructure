@@ -34,3 +34,9 @@ project_networks = {
     ]
 }
 
+load_balancer_type = "application"
+internal = false
+enable_deletion_protection = false
+idle_timeouts = 600
+
+
