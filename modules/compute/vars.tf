@@ -10,25 +10,25 @@ variable "security_group" {
     description = ""
 }
 
-variable "subnets" {
-    type = list(string) 
-    default = []
-    description = ""
-}
-
 #####################################################
 # ASG Variables
 #####################################################
+variable "vpc_id" {}
+
 variable "name" {
   description = "Name used across the resources created"
   type        = string
 }
 
-variable "vpc_zone_identifier" {
+variable "private_subnet_ids" {
+    type = list(any)
+}
+
+/* variable "vpc_zone_identifier" {
   description = "A list of subnet IDs to launch resources in. Subnets automatically determine which availability zones the group will reside. Conflicts with `availability_zones`"
   type        = list(string)
   default     = null
-}
+} */
 
 variable "min_size" {
   description = "The minimum size of the autoscaling group"
@@ -132,23 +132,31 @@ variable "mixed_instances_policy" {
   default     = null
 }
 
-variable "delete_timeout" {
-  description = "Delete timeout to wait for destroying autoscaling group"
-  type        = string
-  default     = null
-}
-
-variable "load_balancers" {
-  description = "A list of elastic load balancer names to add to the autoscaling group names. Only valid for classic load balancers. For ALBs, use `target_group_arns` instead"
-  type        = list(string)
-  default     = []
-}
-
 variable "protect_from_scale_in" {
   description = "Allows setting instance protection. The autoscaling group will not select instances with this setting for termination during scale in events."
   type        = bool
   default     = false
 }
+
+variable "termination_policies" {
+  description = "A list of policies to decide how the instances in the Auto Scaling Group should be terminated. The allowed values are `OldestInstance`, `NewestInstance`, `OldestLaunchConfiguration`, `ClosestToNextInstanceHour`, `OldestLaunchTemplate`, `AllocationStrategy`, `Default`"
+  type        = list(string)
+  default     = null
+}
+
+variable "min_elb_capacity" {
+  description = "Setting this causes Terraform to wait for this number of instances to show up healthy in the ELB only on creation. Updates will not wait on ELB instance number changes"
+  type        = number
+  default     = null
+}
+
+variable "force_delete" {
+  description = "Allows deleting the Auto Scaling Group without waiting for all instances in the pool to terminate. You can force an Auto Scaling Group to delete even if it's in the process of scaling a resource. Normally, Terraform drains all the instances before deleting the group. This bypasses that behavior and potentially leaves resources dangling"
+  type        = bool
+  default     = null
+}
+
+
 
 
 
@@ -228,6 +236,8 @@ variable "capacity_reservation_specification" {
   default     = {}
 }
 
+variable "ami" {}
+
 /* variable "cpu_options" {
   description = "The CPU options for the instance"
   type        = map(string)
@@ -270,18 +280,6 @@ variable "iam_instance_profile_arn" {
   default     = null
 }
 
-/* variable "instance_market_options" {
-  description = "The market (purchasing) option for the instance"
-  type        = any
-  default     = {}
-} */
-
-/* variable "license_specifications" {
-  description = "A list of license specifications to associate with"
-  type        = map(string)
-  default     = {}
-} */
-
 variable "network_interfaces" {
   description = "Customize network interfaces to be attached at instance boot time"
   type        = list(any)
@@ -293,12 +291,6 @@ variable "placement" {
   type        = map(string)
   default     = {}
 }
-
-/* variable "private_dns_name_options" {
-  description = "The options for the instance hostname. The default values are inherited from the subnet"
-  type        = map(string)
-  default     = {}
-} */
 
 variable "tag_specifications" {
   description = "The tags to apply to the resources during launch"
@@ -330,3 +322,50 @@ variable "key_name" {
   type        = string
   default     = null
 }
+
+#####################################################
+# ALB variables
+#####################################################
+
+variable "enable_deletion_protection" {
+  description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
+  type        = bool
+  default     = false
+}
+
+variable "load_balancer_type" {
+  description = "The type of load balancer to create. Possible values are application or network."
+  type        = string
+  default     = "application"
+}
+
+variable "internal" {
+  description = "Boolean determining if the load balancer is internal or externally facing."
+  type        = bool
+  default     = false
+}
+
+variable "subnets" {
+  description = "A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f']"
+  type        = list(string)
+  default     = null
+}
+
+variable "target_groups" {
+  description = "A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend_protocol, backend_port"
+  type        = any
+  default     = []
+}
+
+variable "security_groups" {
+  description = "The security groups to attach to the load balancer. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
+  type        = list(string)
+  default     = []
+}
+
+variable "ip_address_type" {
+  description = "The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack."
+  type        = string
+  default     = "ipv4"
+}
+

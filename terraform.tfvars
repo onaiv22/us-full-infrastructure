@@ -1,6 +1,8 @@
 profile   = "devops-engineer"
 region    = "us-east-1"
 environment = "notprod"
+key_name = "new-devops"
+ami       = "ami-0fb8881276a9bc6e8"
 
 # VPC Networking range
 vpc_cidr = "10.0.0.0/16"
