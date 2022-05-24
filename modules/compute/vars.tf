@@ -66,11 +66,11 @@ variable "default_cooldown" {
   default     = null
 }
 
-variable "load_balancers" {
+/* variable "load_balancers" {
   description = "A list of elastic load balancer names to add to the autoscaling group names. Only valid for classic load balancers. For ALBs, use `target_group_arns` instead"
   type        = list(string)
   default     = []
-}
+} */
 
 variable "target_group_arns" {
   description = "A set of `aws_alb_target_group` ARNs, for use with Application or Network Load Balancing"
@@ -154,6 +154,33 @@ variable "force_delete" {
   description = "Allows deleting the Auto Scaling Group without waiting for all instances in the pool to terminate. You can force an Auto Scaling Group to delete even if it's in the process of scaling a resource. Normally, Terraform drains all the instances before deleting the group. This bypasses that behavior and potentially leaves resources dangling"
   type        = bool
   default     = null
+}
+
+#####################################################
+# Target Group Variables
+#####################################################
+
+variable "target" {
+    type = map(any)
+    
+    default = {
+        name             = "tg"
+        port             = "443"
+        protocol         = "HTTPS"
+        timeout          = 5
+        interval         = 3
+        healthy_threshold = 3
+        matcher          = 200
+        type             = "forward"
+    }
+}
+
+variable "path" {
+    type = map(any)
+
+    default = {
+        healthcheckpath = "/healthstatus"
+    }
 }
 
 

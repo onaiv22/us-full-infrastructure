@@ -21,6 +21,14 @@ module "container" {
     name = "${local.name_prefix}-head"
 }
 
+module "acm" {
+    source = "./modules/acm"
+    providers = {
+        aws = aws.useast1
+    }  
+
+}
+
 module "compute" {
     source = "./modules/compute"
     name = "${local.name_prefix}-asg"
