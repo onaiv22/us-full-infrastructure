@@ -1,5 +1,5 @@
 resource "aws_acm_certificate" "cert" {
-    domain_name = "*.onaivstone.co.uk" 
+    domain_name = "*.senistone.co.uk" 
     validation_method = "DNS"
     subject_alternative_names = ["web.senistone.co.uk"]
 
@@ -19,7 +19,7 @@ resource "aws_route53_record" "cldfront_aliase" {
             name = x.resource_record_name
             record = x.resource_record_value
             type = x.resource_record_type
-            zone_id = x.domain_name == "onaivstone.co.uk" ? data.aws_route53_zone.public.zone_id : data.aws_route53_zone.public.zone_id
+            zone_id = x.domain_name == "senistone.co.uk" ? data.aws_route53_zone.public.zone_id : data.aws_route53_zone.public.zone_id
         }
     }
     allow_overwrite = true 
@@ -36,7 +36,7 @@ resource "aws_acm_certificate_validation" "cert-validation" {
  }
 
 data "aws_acm_certificate" "cert_issued" {
-    domain = "*.onaivstone.co.uk"
+    domain = "*.senistone.co.uk"
     statuses  = ["ISSUED"]
     types      = ["AMAZON_ISSUED"]
     most_recent = true

@@ -1,6 +1,6 @@
 resource "aws_route53_record" "www" {
     zone_id = "Z06824323UXD13ZQRLU3S"
-    name    = "www.onaivstone.tk"
+    name    = "www.senistone.tk"
     type = "CNAME"
     
     alias {
