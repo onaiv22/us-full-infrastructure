@@ -5,3 +5,7 @@ output "public_subnet_id" {
 output "private_subnet_id" {
   value = aws_subnet.private_subnets.*.id
 }
+
+output "bastion-sg-id" {
+    value = aws_security_group.bastion-sg.id
+}

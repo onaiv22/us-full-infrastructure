@@ -1,5 +1,5 @@
 resource "aws_lb_target_group" "main" {
-    name      = var.name
+    name      =  "${var.name}-tg"
     port      = lookup(var.target, "port", "443")
     protocol  = lookup(var.target, "protocol", "HTTPS")
     vpc_id    = var.vpc_id
@@ -8,7 +8,7 @@ resource "aws_lb_target_group" "main" {
     health_check {
       enabled               = true
     #   interval             = lookup(var.target, "interval", 5)
-      path                 = "/healthstatus"
+      path                 = "/"
       port                 = "traffic-port"
       protocol             = lookup(var.target, "protocol", "HTTPS")
       timeout              = lookup(var.target, "timeout", 5)

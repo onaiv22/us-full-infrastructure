@@ -27,8 +27,8 @@ resource "aws_route53_record" "cldfront_aliase" {
     records = [each.value.record]
     ttl = 60
     type = each.value.type
-    zone_id = "Z066309624KG8B8Z7BXIN"
-}
+    zone_id = data.aws_route53_zone.public.zone_id
+}    
 
 resource "aws_acm_certificate_validation" "cert-validation" {
      certificate_arn  = aws_acm_certificate.cert.arn
