@@ -1,7 +1,7 @@
 resource "aws_autoscaling_group" "main" {
-    name = var.name 
+    name = "${var.name}-asg"
     
-    vpc_zone_identifier = var.private_subnet_ids
+    vpc_zone_identifier = var.which_subnet_ids
     
     min_size = var.min_size
     max_size = var.max_size
@@ -13,7 +13,7 @@ resource "aws_autoscaling_group" "main" {
     wait_for_capacity_timeout = var.wait_for_capacity_timeout 
     default_cooldown = var.default_cooldown
     protect_from_scale_in = var.protect_from_scale_in
-    target_group_arn = aws_lb_target_group.main.target_group_arn # put the target group arn of the alb here
+    target_group_arns = var.target_group_arns # put the target group arn of the alb here
     health_check_type = var.health_check_type
     health_check_grace_period = var.health_check_grace_period
 

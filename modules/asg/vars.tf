@@ -8,26 +8,27 @@ variable "name" {
   type        = string
 }
 
-variable "private_subnet_ids" {
+variable "which_subnet_ids" {
     type = list(any)
+    description = "which subnet to deploy this resources either public or private subnets"
 }
 
 variable "min_size" {
   description = "The minimum size of the autoscaling group"
   type        = number
-  default     = null
+  default     = 1
 }
 
 variable "max_size" {
   description = "The maximum size of the autoscaling group"
   type        = number
-  default     = null
+  default     = 2
 }
 
 variable "desired_capacity" {
   description = "The number of Amazon EC2 instances that should be running in the autoscaling group"
   type        = number
-  default     = null
+  default     = 1
 }
 
 variable "wait_for_elb_capacity" {
@@ -58,6 +59,12 @@ variable "health_check_type" {
   description = "`EC2` or `ELB`. Controls how health checking is done"
   type        = string
   default     = null
+}
+
+variable "instance_type" {
+  description = "The EC2 instance type to use, defaults to t2.micro"
+  type        = string
+  default     = "t2.micro"
 }
 
 variable "health_check_grace_period" {
@@ -143,14 +150,14 @@ variable "launch_template_description" {
   default     = null
 }
 
-variable "default_version" {
+/* variable "default_version" {
   description = "Default Version of the launch template"
   type        = string
   default     = null
-}
+} */
 
-variable "image_id" {}
-variable "key_name" {}
+
+
 variable "ami" {}
 
 variable "user_data" {
@@ -159,15 +166,15 @@ variable "user_data" {
   default     = null
 }
 
-variable "instance_type" {
-  description = "The type of the instance to launch"
-  type        = string
-  default     = ""
-}
-
 variable "key_name" {
   description = "The key name that should be used for the instance"
   type        = string
   default     = null
+}
+
+variable "security_group_id" {
+  description = "The security group id to attach to tthe instances"
+  type = list(string)
+  default = []
 }
 

@@ -7,5 +7,9 @@ output "private_subnet_id" {
 }
 
 output "bastion-sg-id" {
-    value = aws_security_group.bastion-sg.id
+    value = aws_security_group.bastion.id
+}
+
+output "alb-sg-id" {
+    value = aws_security_group.alb.id
 }

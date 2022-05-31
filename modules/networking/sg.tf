@@ -1,4 +1,4 @@
-resource "aws_security_group" "bastion-sg" {
+resource "aws_security_group" "bastion" {
     name = "${var.name}-bastion-sg"
     description = "allow inbound and outbound traffic"
     vpc_id = var.vpc_id
@@ -25,7 +25,7 @@ resource "aws_security_group" "bastion-sg" {
 }
 
 resource "aws_security_group" "alb" {
-    name = "alb-sg"
+    name = "${var.name}-alb-sg"
     description = "allow inbound and outbound traffic to and from alb"
     vpc_id = var.vpc_id
 
@@ -74,7 +74,7 @@ resource "aws_security_group" "alb" {
         protocol    = "-1"
         cidr_blocks = ["0.0.0.0/0"]
   }
-}
+} */
 locals {
     ingress_rules_for_bastion_servers = [{
         port = "22"
@@ -102,9 +102,9 @@ locals {
         cidr_blocks = ["0.0.0.0/0"]
 
     }]
-    ingress_rules3_nginx = [{
+    /* ingress_rules3_nginx = [{
         port = 443
         description = "allow traffic from alb"
         security_groups = [aws_security_group.alb.id]
-    }]
-} */
+    }] */
+}

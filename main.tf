@@ -11,9 +11,27 @@ module "vpc" {
 
 module "networking" {
     source = "./modules/networking"
+    name   = local.name_prefix
     networks = var.project_networks
     vpc_id = module.vpc.vpc_id
     gw_id = module.vpc.gw_id
+}
+
+module "bastion-asg" {
+    source                        = "./modules/asg" 
+    name                          = local.name_prefix
+    ami                           = var.ami
+    vpc_id                        = module.vpc.vpc_id
+    key_name                      = var.key_name
+    user_data                     = filebase64("nginx-bootstrap.sh")
+    security_group_id             = [module.networking.bastion-sg-id]
+    which_subnet_ids              = module.networking.public_subnet_id
+    launch_template_description   = "launch template for bastion instances"
+    min_size                      = 1
+    max_size                      = 2
+    default_cooldown              = 3
+    desired_capacity              = 1
+    wait_for_capacity_timeout     = 0
 }
 
 module "container" {
@@ -23,18 +41,21 @@ module "container" {
 
 module "acm" {
     source = "./modules/acm"
-    providers = {
-        aws = aws.useast1
-    }  
 
 }
 
-module "compute" {
-    source = "./modules/compute"
-    name = "${local.name_prefix}-asg"
-    vpc_id = module.vpc.vpc_id
-    ami = var.ami
-    //environment = var.environment
+/* module "bastion-compute" {
+    source            = "./modules/compute"
+    name              = local.name_prefix
+    vpc_id            = module.vpc.vpc_id
+    ami               = var.ami
+    key               = var.key_name
+    user_data         = filebase64("bootstrap-nginx.sh")
+    key_name          = var.key_name
+    default_version   = "$Latest"
+    environment       = var.environment
+    public_subnet_ids = module.networking.public_subnet_ids
+    security_group_id = module.subnets.bastion-sg-id
 
     min_size = 1
     max_size = 2
@@ -42,22 +63,12 @@ module "compute" {
     desired_capacity = 1
     wait_for_capacity_timeout = 0
     //enable_monitoring = true
-    key_name = var.key_name
+    
     //vpc_zone_identifier = module.networking.private_subnets.id
 
     //capacity_rebalance = "disabled"
     //target_group_arn = "" # have left this as an empty string for now, ones we have alb and tg settings in put this in
-    health_check_type = "EC2"
-    health_check_grace_period = 300
-    termination_policies = ["OldestInstance"] # could be any of this - OldestInstance, NewestInstance, OldestLaunchConfiguration, ClosestToNextInstanceHour, OldestLaunchTemplate, AllocationStrategy, Default.
-
-    launch_template_name = "${local.name_prefix}-lt"
-    launch_template_description = "The launch template for ${local.name_prefix}-lt"
-    default_version = "$Latest"
-    user_data = ""
-    private_subnet_ids = module.networking.private_subnet_id
     
     
-    
-}
+} */
 
