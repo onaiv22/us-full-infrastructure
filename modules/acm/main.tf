@@ -13,7 +13,7 @@ data "aws_route53_zone" "public" {
     private_zone = false
 }
 
-resource "aws_route53_record" "cldfront_aliase" {
+resource "aws_route53_record" "alb_aliase" {
     for_each = {
         for x in aws_acm_certificate.cert.domain_validation_options : x.domain_name => {
             name = x.resource_record_name
@@ -32,7 +32,7 @@ resource "aws_route53_record" "cldfront_aliase" {
 
 resource "aws_acm_certificate_validation" "cert-validation" {
      certificate_arn  = aws_acm_certificate.cert.arn
-     validation_record_fqdns = [for record in aws_route53_record.cldfront_aliase : record.fqdn]
+     validation_record_fqdns = [for record in aws_route53_record.alb_aliase : record.fqdn]
  }
 
 data "aws_acm_certificate" "cert_issued" {
@@ -41,6 +41,10 @@ data "aws_acm_certificate" "cert_issued" {
     types      = ["AMAZON_ISSUED"]
     most_recent = true
 
+    depends_on = [
+        aws_acm_certificate.cert
+    ]
+
 }
 
 output "cert_issued" {
@@ -48,7 +52,7 @@ output "cert_issued" {
 }
 
 
-output "cert" {
+output "certificate" {
     value = aws_acm_certificate.cert.arn
 }
 

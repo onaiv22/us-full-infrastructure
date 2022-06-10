@@ -21,7 +21,7 @@ resource "aws_lb_listener" "main" {
     load_balancer_arn      = aws_lb.main.arn 
     port                   = lookup(var.target, "port", "443")
     protocol               = lookup(var.target, "protocol", "HTTPS")
-    certificate_arn        = aws_acm_certificate.main.arn
+    certificate_arn        = var.cert
     ssl_policy             = "ELBSecurityPolicy-2016-08"
 
     default_action {
@@ -30,7 +30,3 @@ resource "aws_lb_listener" "main" {
     }
 }
 
-resource "aws_acm_certificate" "main" {
-    domain_name            = "senistone.co.uk"
-    validation_method      = "DNS"
-}

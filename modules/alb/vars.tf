@@ -1,6 +1,18 @@
 #####################################################
 # ALB variables
 #####################################################
+variable "vpc_id" {}
+
+variable "cert" {
+  description = "Arn of the certificate"
+  type        = string
+}
+variable "environment" {}
+
+variable "name" {
+  description = "Name used across the resources created"
+  type        = string
+}
 
 variable "enable_deletion_protection" {
   description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
@@ -26,11 +38,7 @@ variable "subnets" {
   default     = null
 }
 
-variable "target_groups" {
-  description = "A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend_protocol, backend_port"
-  type        = any
-  default     = []
-}
+
 
 variable "security_groups" {
   description = "The security groups to attach to the load balancer. e.g. [\"sg-edcd9784\",\"sg-edcd9785\"]"
