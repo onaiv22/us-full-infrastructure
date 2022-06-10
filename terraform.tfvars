@@ -1,17 +1,17 @@
 profile   = "devops-engineer"
-region    = "us-east-1"
+region    = "eu-west-1"
 environment = "notprod"
-key_name = "dev-key"
-ami       = "ami-d06ef2c7" #ami-0022f774911c1d690
+key_name = "new-devops"
+ami       = "ami-0c1bc246476a5572b" #"ami-d06ef2c7" #ami-0022f774911c1d690
 
 # VPC Networking range
 vpc_cidr = "10.0.0.0/16"
 
 project_networks = {
     zones = [
-        "us-east-1a",
-        "us-east-1b",
-        "us-east-1c",
+        "eu-west-1a",
+        "eu-west-1b",
+        "eu-west-1c",
         
     ],
     private_subnets = [

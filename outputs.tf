@@ -17,3 +17,7 @@ output "bastion-sg-id" {
 output "alb-sg-id" {
     value = module.networking.alb-sg-id
 }
+
+output "certificate" {
+  value = module.acm.cert
+}
